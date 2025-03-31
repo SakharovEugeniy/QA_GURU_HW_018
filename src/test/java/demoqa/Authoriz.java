@@ -6,22 +6,33 @@ import models.AuthorizResponseBody;
 
 import static io.restassured.http.ContentType.JSON;
 
+
 public class Authoriz {
 
     private String token;
     private AuthorizRequestBody requestBody = new AuthorizRequestBody();
+
+    public Authoriz() {
     requestBody.setUserName("testUser0018");
     requestBody.setPassword("testUser0018!");
+    AuthorizResponseBody responseBody = RestAssured
+            .given()
+            .accept("application/json")
+            .contentType("application/json")
+            .body(requestBody)
+            .log().all()
+            .when()
+            .post("/Account/v1/GenerateToken")
+            .then()
+            .log().all()
+            //.statusCode(200)
+            .extract()
+            .as(AuthorizResponseBody.class);
 
+    this.token = responseBody.getToken();
+    }
 
-/*    public Authoriz() {
-
-        AuthorizResponseBody authorizResponseBody = RestAssured
-                .given()
-                .contentType(JSON)
-                .log().all()
-                .when()
-                .
-
-    }*/
+    public String getToken(){
+        return token;
+    }
 }
